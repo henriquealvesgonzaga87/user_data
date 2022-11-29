@@ -1,29 +1,47 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from multiprocessing import context
 from .forms import UserForm
+from .models import *
 
 # Create your views here.
 
 
 def index(request):
-    return render(request, 'user/index.html')
+    try:
+        users = User.objects.all()
+        context = {'users': users}
+    except Exception:
+        return "We're having problems to load the system. Sorry!"
+    else:
+        return render(request, 'index.html', context)
 
 
 def create(request):
     if request.method == 'GET':
-        form = UserForm()
+        try:
+            form = UserForm()
 
-        context = {
-            'form': form
-        }
-        return render(request, 'user/create.html', context=context)
-    else:
-        form = UserForm(request.POST)
-        if form.is_valid():
             context = {
-                'name': form.cleaned_data['name'],
-                'email': form.cleaned_data['email'],
-                'bday': form.cleaned_data['bday'],
-                'tax_number': form.cleaned_data['tax_number']
+                'form': form
             }
-    return render(request, 'user/index.html', context=context)
+        except Exception:
+            return "We're having problems to load the system. Sorry!"
+        else:
+            return render(request, 'create.html', context=context)
+    else:
+        try:
+            form = UserForm(request.POST)
+            if form.is_valid():
+                form.save()
+        except Exception:
+            return "We're having problems to load the system. Sorry!"
+        else:
+            return redirect(index)
+
+
+def modify(request, user_id):
+    pass
+
+
+def delete(request, user_id):
+    pass
