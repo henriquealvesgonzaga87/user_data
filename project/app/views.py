@@ -40,8 +40,24 @@ def create(request):
 
 
 def modify(request, user_id):
-    pass
-
+    user = User.objects.get(pk=user_id)
+    if request.method == "POST":
+        try:
+            form = UserForm(data=request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+        except Exception:
+            return "We're having problems to load the system. Sorry!"
+        else:
+            return redirect(index)
+    else:
+        try:
+            form = UserForm(instance=user)
+            context = {'form': form}
+        except Exception:
+            return "We're having problems to load the system. Sorry!"
+        else:
+            return render(request, 'create.html', context=context)
 
 def delete(request, user_id):
     pass
