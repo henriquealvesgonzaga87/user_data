@@ -6,3 +6,6 @@ class User(models.Model):
     email = models.EmailField('email')
     bday = models.DateField('birthday')
     tax_number = models.CharField('tax number', max_length=120)
+
+    def __str__(self):
+        return f'name: {self.name}, email: {self.email}, birthday: {self.bday}, tax number: {self.tax_number}'
