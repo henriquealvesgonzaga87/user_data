@@ -59,5 +59,12 @@ def modify(request, user_id):
         else:
             return render(request, 'create.html', context=context)
 
+
 def delete(request, user_id):
-    pass
+    try:
+        user = User.objects.get(pk=user_id)
+        user.delete()
+    except Exception:
+        return "We're having problems to load the system. Sorry!"
+    else:
+        return redirect(index)
